@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .button-style {
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<form th:method="PATCH" th:action="@{/people/{id}(id=${person.id})}" th:object="${person}">
+    <input type="hidden" th:field="*{id}" />
+    <label for="name">Введите ФИО</label>
+    <input type="text" th:field="*{name}" id="name"/>
+    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+
+    <br/>
+    <label for="age">Введите год рождения</label>
+    <input type="text" th:field="*{birthYear}" id="age"/>
+    <div style="color:red" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}">birthYear error</div>
+    <br/>
+    <input type="submit" value="Редактировать">
+</form>
+</body>
+</html>

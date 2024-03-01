@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .button-style {
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div th:each="book: ${books}">
+    <a th:href="@{books/{id}(id=${book.getId()})}"
+       th:text="${book.getAuthor()+', '+book.getName()+', '+book.getYear()}">user</a>
+</div>
+<br>
+<hr>
+<a href="/books/new" class="button-style">Create new book</a>
+</body>
+</html>

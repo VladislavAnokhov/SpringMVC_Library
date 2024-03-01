@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Show person</title>
+    <style>
+        .button-style {
+            display: inline-block;
+            padding: 8px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<p th:text="${person.getName()}+', '+${person.getBirthYear()}">VALUE</p>
+
+<div th:if="${books.isEmpty()}">
+    <p>Человек пока не вязл ни одной книги</p>
+</div>
+
+<div th:if="${!books.isEmpty()}">
+    <hr/>
+    <b>Книги:</b>
+    <br/>
+    <table th:each="book: ${books}">
+        <tr th:text="${book.getName()+', '+book.getAuthor()+', '+book.getYear()}">book</tr>
+    </table>
+    <hr/>
+</div>
+
+<hr/>
+<a th:href="@{/people/{id}/edit(id=${person.getId()})}" class="button-style">Редактировать</a>
+<br>
+<form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}"/>
+<input type="submit" value="Удалить" class="button-style">
+</body>
+</html>
