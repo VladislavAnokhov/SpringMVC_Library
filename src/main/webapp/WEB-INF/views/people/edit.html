@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Edit person</title>
     <style>
         .button-style {
             display: inline-block;
@@ -14,6 +14,7 @@
             border-radius: 5px;
             border: none;
             cursor: pointer;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -29,7 +30,10 @@
     <input type="text" th:field="*{birthYear}" id="age"/>
     <div style="color:red" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}">birthYear error</div>
     <br/>
-    <input type="submit" value="Редактировать">
+    <input type="submit" class="button-style" value="Редактировать">
 </form>
+<div>
+    <a th:href="@{/people}" class="button-style">Назад</a>
+</div>
 </body>
 </html>

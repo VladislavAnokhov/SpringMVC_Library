@@ -6,25 +6,46 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import springMVC.dao.PersonDAO;
+
+import springMVC.models.Book;
 import springMVC.models.Person;
+import springMVC.services.BookService;
+import springMVC.services.PersonService;
 import springMVC.validator.PersonValidator;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/people")
 public class PersonController {
-    private final PersonDAO personDAO;
-    private final PersonValidator personValidator;
+    private final PersonService personService;
 
+    private final PersonValidator personValidator;
+    private final BookService bookService;
     @Autowired
-    public PersonController(PersonDAO personDAO, PersonValidator personValidator) {
-        this.personDAO = personDAO;
+    public PersonController(PersonService personService, PersonValidator personValidator, BookService bookService) {
+        this.personService = personService;
         this.personValidator = personValidator;
+        this.bookService = bookService;
     }
 
-    @GetMapping()
-    public String index (Model model){
-        model.addAttribute("people", personDAO.index());
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String index (Model model,
+                         @RequestParam(value = "page",required = false,defaultValue = "1")int page,
+                         @RequestParam(value = "limit",required = false,defaultValue = "10")int limit){
+        List<Person> people = personService.byPage(page-1,limit);
+        model.addAttribute("people",people);
+        model.addAttribute("current_page",page);
+        int totalPages = (int) Math.ceil(1.0* personService.getAllCount()/ limit);
+        List<Integer> pageNumbers= null;
+        if(totalPages>1) {
+            pageNumbers= IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+        }
+        model.addAttribute("page_numbers",pageNumbers);
+
         return "/people/index";
     }
 
@@ -39,23 +60,20 @@ public class PersonController {
         if (bindingResult.hasErrors()){
             return "/people/new";
         }
-        personDAO.save(person);
+        personService.save(person);
         return "redirect:/people";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model,@PathVariable("id") int id){
-        Person person = personDAO.show(id).orElse(new Person());
-        model.addAttribute("person",person);
+        model.addAttribute("person",personService.getById(id));
         return "/people/edit";
     }
 
     @GetMapping("/{id}")
     public String show (@PathVariable("id") int id,Model model){
-        Person person = personDAO.show(id).orElse(new Person());
-        model.addAttribute("person",person);
-        model.addAttribute("books",personDAO.getBooksByPersonId(id));
-
+        model.addAttribute("person",personService.getById(id));
+        model.addAttribute("books",personService.findBooks(id));
         return "/people/show";
     }
 
@@ -64,25 +82,13 @@ public class PersonController {
         personValidator.validate(person,bindingResult);
         if (bindingResult.hasErrors())
             return  "people/edit";
-        Person currentPerson = personDAO.show(id).orElse(null);
-        if (currentPerson != null) {
-            boolean nameChanged = !currentPerson.getName().equals(person.getName());
-            boolean birthYearChanged = currentPerson.getBirthYear() != person.getBirthYear();
-
-            if (nameChanged && birthYearChanged) {
-                personDAO.updateFull(id, person);
-            } else if (nameChanged) {
-                personDAO.updateName(id, person);
-            } else if (birthYearChanged) {
-                personDAO.updateBirthYear(id, person);
-            }
-        }
+        personService.upDate(id,person);
     return "redirect:/people";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id){
-        personDAO.delete(id);
+        personService.delete(id);
         return "redirect:/people";
     }
 }

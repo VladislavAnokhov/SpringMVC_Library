@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Books</title>
     <style>
+
         .button-style {
             display: inline-block;
             padding: 10px 20px;
@@ -14,6 +15,11 @@
             border-radius: 5px;
             border: none;
             cursor: pointer;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .active {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -23,7 +29,21 @@
        th:text="${book.getAuthor()+', '+book.getName()+', '+book.getYear()}">user</a>
 </div>
 <br>
+<div class="pagination">
+    <a th:each="pageNumber : ${page_numbers}"
+       th:href="@{/books(page=${pageNumber}, limit=10)}"
+       th:text="${pageNumber}"
+       th:classappend="${pageNumber == current_page ? 'button-style active' : 'button-style'}">
+    </a>
+</div>
 <hr>
-<a href="/books/new" class="button-style">Create new book</a>
+
+<a href="/books/new" class="button-style">Добавить новую книгу</a>
+<a href="/books?sort=year" class="button-style">Сортировать по году</a>
+<a href="/books/search" class="button-style">Найти книгу</a>
+<div>
+    <a th:href="@{/people}" class="button-style">Перейти к пользователям</a>
+</div>
 </body>
+
 </html>

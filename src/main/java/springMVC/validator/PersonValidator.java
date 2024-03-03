@@ -4,18 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import springMVC.dao.PersonDAO;
+
 import springMVC.models.Person;
+import springMVC.services.PersonService;
 
 import java.util.Optional;
 
 @Component
 public class PersonValidator implements Validator {
-    private final PersonDAO personDAO;
+    private final PersonService personService;
 
     @Autowired
-    public PersonValidator(PersonDAO personDAO) {
-        this.personDAO = personDAO;
+    public PersonValidator(PersonService personService) {
+        this.personService = personService;
     }
 
     @Override
@@ -26,8 +27,9 @@ public class PersonValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Person person = (Person) target;
-        Optional<Person> existingPerson = personDAO.show(person.getName());
-        if (personDAO.show(person.getName()).isPresent() && (person.getId() != existingPerson.get().getId())) {
+       // Optional<Person>  = personDAO.show(person.getName());
+        Person existingPerson =  personService.getByName(person.getName());
+        if (existingPerson!=null && (person.getId() != existingPerson.getId())) {
             errors.rejectValue("name", "", "Человек с таким ФИО уже зарегистрирован");
         }
 

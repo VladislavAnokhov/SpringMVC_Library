@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search book</title>
+    <style>
+        .owner {
+            font-weight: bold;
+            text-decoration: underline;
+       /*//     color: red; */
+        }
+        .button-style {
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<form action="/books/search" method="GET">
+    <label for="bookName">Введите название книги:</label>
+    <input type="text" id="bookName" name="bookName">
+    <button type="submit" class="button-style">Искать</button>
+</form>
+<div th:if="${not #lists.isEmpty(foundBooks)}">
+    <div th:each="book : ${foundBooks}">
+        <p th:text="${book.name + ', автор: ' + book.author + ', год: ' + book.year}" ></p>
+        <p th:if="${book.getOwner() != null}" th:text="'Эта книга сейчас у: ' + ${book.getOwner().name}" class="owner"></p>
+        <p th:if="${book.getOwner() == null}" class="owner">Книга сейчас ни у кого не находится.</p>
+    </div>
+</div>
+
+<p th:if="${#lists.isEmpty(foundBooks)}" class="owner">Книг не найдено</p>
+<div>
+    <a th:href="@{/books}" class="button-style">Назад</a>
+</div>
+</body>
+</html>

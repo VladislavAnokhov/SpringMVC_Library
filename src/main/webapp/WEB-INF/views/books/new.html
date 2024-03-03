@@ -3,6 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>New Book</title>
+    <style>
+        .button-style {
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
 <form th:method="POST" th:action="@{/books}" th:object="${book}">
@@ -22,7 +36,9 @@
     <div style="color:red" th:if="${#fields.hasErrors('year')}" th:errors="*{year}">year error</div>
     <br/>
     <input type="submit" value="Добавить книгу">
-
 </form>
+<div>
+    <a th:href="@{/books}" class="button-style">Назад</a>
+</div>
 </body>
 </html>

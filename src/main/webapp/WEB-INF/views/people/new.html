@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <title>New Person</title>
 </head>
+<style>
+    .button-style {
+        display: inline-block;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        margin-bottom: 5px;
+    }
+</style>
 <body>
 <form th:method="POST" th:action="@{/people}" th:object="${person}">
         <label for="name">Введите ФИО</label>
@@ -18,5 +32,8 @@
         <input type="submit" value="Добавить пользователя">
 
 </form>
+<div>
+    <a th:href="@{/people}" class="button-style">Назад</a>
+</div>
 </body>
 </html>

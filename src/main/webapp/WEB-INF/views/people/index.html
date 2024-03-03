@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>People</title>
     <style>
         .button-style {
             display: inline-block;
@@ -14,16 +14,31 @@
             border-radius: 5px;
             border: none;
             cursor: pointer;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .active {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 <div th:each="person: ${people}">
     <a th:href="@{people/{id}(id=${person.getId()})}"
-       th:text="${person.getName()+', '+person.getBirthYear()+' INDEX: '+person.getId()}">user</a>
+       th:text="${person.getName()+', '+person.getBirthYear()}">user</a>
 </div>
 <br>
+<div class="pagination">
+    <a th:each="pageNumber : ${page_numbers}"
+       th:href="@{/people(page=${pageNumber}, limit=10)}"
+       th:text="${pageNumber}"
+       th:classappend="${pageNumber == current_page ? 'button-style active' : 'button-style'}">
+    </a>
+</div>
 <hr>
-<a href="/people/new" class="button-style">Create new person</a>
+<a href="/people/new" class="button-style">Добавить нового пользователя</a>
+<div>
+    <a th:href="@{/books}" class="button-style">Перейти к книгам</a>
+</div>
 </body>
 </html>
